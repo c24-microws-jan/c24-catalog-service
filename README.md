@@ -29,3 +29,164 @@ docker run -it -p 3000:3000 c24-catalog-service
 docker tag c24-catalog-service 46.101.193.82:5000/c24-catalog-service:1.0.0
 docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
 ~~~
+
+**List Products**
+----
+  List all products in catalog
+
+* **URL**
+
+  /
+
+* **Method:**
+
+  `GET`
+
+*  **URL Params**
+
+   **Required:**
+
+		None
+
+   **Optional:**
+
+   `limit=[integer]`
+   `offset=[integer]`
+   `query=[string]`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `[]`
+
+* **Error Response:**
+
+  * **Code:** 400 Bad Request <br />
+    **Content:** `{ error : { message: "" } }`
+
+* **Sample Call:**
+
+  GET /
+
+* **Notes:**
+
+**Get Product**
+----
+  Get product in catalog
+
+* **URL**
+
+  /:id
+
+* **Method:**
+
+  `GET`
+
+*  **URL Params**
+
+   **Required:**
+
+		`id=[string]`
+
+   **Optional:**
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{}`
+
+* **Error Response:**
+
+  * **Code:** 400 Bad Request <br />
+    **Content:** `{ error : { message: "Invalid request" } }`
+
+  * **Code:** 404 Not Found <br />
+    **Content:** `{ error : { message: "Product not found" } }`
+
+* **Sample Call:**
+
+  GET /:asd123123sad
+
+**Add Product**
+----
+  Add product in catalog
+
+* **URL**
+
+  /
+
+* **Method:**
+
+  `POST`
+
+*  **URL Params**
+
+   **Required:**
+
+   **Optional:**
+
+* **Data Params**
+
+  {
+		musicbrainzReleaseId: [guid]
+	}
+
+* **Success Response:**
+
+  * **Code:** 201 <br />
+    **Content:** `{ id: integer }`
+
+* **Error Response:**
+
+  * **Code:** 400 Bad Request <br />
+    **Content:** `{ error : { message: "Invalid request" } }`
+
+  * **Code:** 404 Not Found <br />
+    **Content:** `{ error : { message: "Product not found" } }`
+
+* **Sample Call:**
+
+  GET /:asd123123sad
+
+**DELETE Product**
+----
+  Delete product in catalog
+
+* **URL**
+
+  /:id
+
+* **Method:**
+
+  `DELETE`
+
+*  **URL Params**
+
+   **Required:**
+
+		`id=[string]`
+
+   **Optional:**
+
+* **Data Params**
+
+* **Success Response:**
+
+  * **Code:** 204 <br />
+
+* **Error Response:**
+
+  * **Code:** 404 Not Found <br />
+    **Content:** `{ error : { message: "Product not found" } }`
+
+* **Sample Call:**
+
+  DELETE /:asd123123sad
