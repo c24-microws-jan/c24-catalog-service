@@ -48,18 +48,33 @@ app.post('/', (req, res) => {
     }
 
 
-    request(`http://musicbrainz.org/ws/2/release/${remoteId}?fmt=json`, (err, resp, release) => {
+    request(`http://musicbrainz.org/ws/2/release/${remoteId}?inc=artist+credits+labels+discids+recordings&fmt=json`, (err, resp, release) => {
       if (err) {
         if (err) {
           return res.status(500).send(err);
         }
       }
 
+      let parsedRelease;
+      try {
+        parsedRelease = JSON.parse(release);
+      } catch(err) {
+        return res.status(400).send({ error: { message: 'Returned Release data is invalid json' }});
+      }
+
       request(`http://ia802607.us.archive.org/32/items/mbid-${remoteId}/index.json`, (err, resp, images) => {
+        let parsedImages;
+
+        try {
+          parsedImages = JSON.parse(images);
+        } catch(err) {
+          parsedImages = [];
+        }
+
         const product = new db.ProductModel({
           remoteId: remoteId,
-          release: JSON.parse(release),
-          images: JSON.parse(images).images
+          release: parsedRelease,
+          images: parsedImages || {}
         });
 
         product.save((err, product) => {
