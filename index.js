@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -74,12 +76,14 @@ app.post('/', (req, res) => {
   });
 });
 
+let server;
+
 if (!module.parent) {
-  console.log(`Service listening on port ${PORT} ...`);
-  const server = app.listen(PORT);
+  db.connect(() => {
+    console.log(`Service listening on port ${PORT} ...`);
+    server = app.listen(PORT);
+  });
 }
-
-
 
 
 ////////////// GRACEFUL SHUTDOWN CODE ////
