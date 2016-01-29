@@ -15,9 +15,11 @@
     "example"
   ],
   "scripts": {
-    "start": "node index.js"
+    "start": "gulp",
+    "local-test": "MONGODB=mongodb://localhost:27017 mocha index.specs.js"
   },
   "dependencies": {
+    "babel": "^6.3.26",
     "body-parser": "~1.14.2",
     "cors": "~2.7.1",
     "expect.js": "^0.3.1",
@@ -31,11 +33,16 @@
     "sinon": "^1.17.3"
   },
   "devDependencies": {
+    "babel-core": "^6.4.5",
+    "expect.js": "^0.3.1",
     "gulp": "~3.9.0",
     "gulp-live-server": "~0.0.29",
     "gulp-shell": "~0.5.2",
     "minimist": "~1.2.0",
+    "mocha": "^2.4.5",
     "run-sequence": "~1.1.5",
+    "sinon": "^1.17.3",
+    "supertest": "^1.1.0",
     "tiny-shipyard-client": "~1.1.0"
   }
 }

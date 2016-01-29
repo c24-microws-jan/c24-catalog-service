@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const request = require('request')
+const db = require('./lib/db');
 
 // Define some default values if not set in environment
 const PORT = process.env.PORT || 3000;
@@ -21,21 +23,61 @@ app.get(SERVICE_CHECK_HTTP, function (req, res) {
   res.json({ message: 'OK' });
 });
 
-// Add all other service routes
-app.get('/', function (req, res) {
-  console.log('GET /');
-  res.send('Hello World');
+app.get('/', (req, res) => {
+  db.ProductModel.find({}, (err, products) => {
+    if (err) {
+      res.status(500).end();
+    }
+
+    res.status(200).send(products);
+  });
 });
 
-app.post('/', function (req, res) {
-  console.log('POST /', JSON.stringify(req.body));
-  res.status(201).end();
+app.post('/', (req, res) => {
+  const remoteId = req.body.remoteId;
+
+  db.ProductModel.findOne({ remoteId: remoteId }, (err, product) => {
+    if (err) {
+      return res.status(500).end();
+    }
+
+    if (product) {
+      return res.status(409).json({ error: { message: 'Product already exists' }});
+    }
+
+
+    request(`http://musicbrainz.org/ws/2/release/${remoteId}?fmt=json`, (err, resp, release) => {
+      if (err) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      }
+
+      request(`http://ia802607.us.archive.org/32/items/mbid-${remoteId}/index.json`, (err, resp, images) => {
+        const product = new db.ProductModel({
+          remoteId: remoteId,
+          release: JSON.parse(release),
+          images: JSON.parse(images).images
+        });
+
+        product.save((err, product) => {
+          if (err) {
+            if (err) {
+              return res.status(500).end();
+            }
+          }
+
+          res.status(201).json(product);
+        });
+      });
+    });
+  });
 });
 
-// Start the server
-const server = app.listen(PORT);
-
-console.log(`Service listening on port ${PORT} ...`);
+if (!module.parent) {
+  console.log(`Service listening on port ${PORT} ...`);
+  const server = app.listen(PORT);
+}
 
 
 
@@ -63,3 +105,5 @@ process.on('SIGTERM', gracefulShutdown);
 
 // listen for INT signal e.g. Ctrl-C
 process.on('SIGINT', gracefulShutdown);
+
+module.exports = app;
