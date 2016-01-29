@@ -69,6 +69,31 @@ describe('API', () => {
           });
       });
     });
+
+    describe('GET /?query=Nirvana', () => {
+      beforeEach(done => {
+        request(index)
+          .post('/')
+          .send({ remoteId: '4cc3cb6c-af18-4317-8999-97dedee622b5' })
+          .end(done)
+      });
+
+      afterEach(done => {
+        request(index)
+          .del('/5cc3cb6c-af18-4317-8999-97dedee622b5')
+          .end(done)
+      });
+
+      it('should return return matching list', done => {
+        request(index)
+          .get('/?query=Nirvana')
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.length).to.be.eql(1);
+            done(err);
+          });
+      });
+    });
   });
 
   describe('POST /', () => {
