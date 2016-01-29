@@ -7,7 +7,15 @@ const nock = require('nock');
 nock('http://musicbrainz.org')
   .get('/ws/2/release/5cc3cb6c-af18-4317-8999-97dedee622b5?inc=artist-credits+labels+discids+recordings&fmt=json')
   .reply(200, {
-    'id': '5cc3cb6c-af18-4317-8999-97dedee622b5'
+    'id': '5cc3cb6c-af18-4317-8999-97dedee622b5',
+    'title': 'Rammstein'
+  });
+
+nock('http://musicbrainz.org')
+  .get('/ws/2/release/4cc3cb6c-af18-4317-8999-97dedee622b5?inc=artist-credits+labels+discids+recordings&fmt=json')
+  .reply(200, {
+    'id': '5cc3cb6c-af18-4317-8999-97dedee622b5',
+    'title': 'Nirvana'
   });
 
 nock('http://ia802607.us.archive.org')
@@ -36,6 +44,31 @@ describe('API', () => {
         .expect(200)
         .end(done());
     });
+
+    describe('GET /?query=Rammstein', () => {
+      beforeEach(done => {
+        request(index)
+          .post('/')
+          .send({ remoteId: '4cc3cb6c-af18-4317-8999-97dedee622b5' })
+          .end(done)
+      });
+
+      afterEach(done => {
+        request(index)
+          .del('/5cc3cb6c-af18-4317-8999-97dedee622b5')
+          .end(done)
+      });
+
+      it('should return return empty list', done => {
+        request(index)
+          .get('/?query=Rammstein')
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.length).to.be.eql(0);
+            done(err);
+          });
+      });
+    });
   });
 
   describe('POST /', () => {
@@ -45,13 +78,9 @@ describe('API', () => {
         .send({ remoteId: '5cc3cb6c-af18-4317-8999-97dedee622b5' })
         .expect(201)
         .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-
           expect(res.body.release.id).to.be.eql('5cc3cb6c-af18-4317-8999-97dedee622b5')
           expect(res.body.images.length).to.be.eql(1);
-          done();
+          done(err);
         });
     });
 

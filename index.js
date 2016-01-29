@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const request = require('request')
 const db = require('./lib/db');
+const joi = require('joi');
 
 // Define some default values if not set in environment
 const PORT = process.env.PORT || 3000;
@@ -26,12 +27,34 @@ app.get(SERVICE_CHECK_HTTP, function (req, res) {
 });
 
 app.get('/', (req, res) => {
-  db.ProductModel.find({}, (err, products) => {
-    if (err) {
-      res.status(500).end();
+  const querySchema = joi.object().keys({
+    limit: joi.number().integer().optional(),
+    offset: joi.number().integer().optional(),
+    query: joi.string().optional()
+  });
+
+  joi.validate(req.query, querySchema, (err, params) => {
+    let queryString;
+
+    const query = db.ProductModel.find({});
+
+    if (params.query) {
+      queryString = params.query.split(' ').map((part) => { return { 'release.title': part }});
     }
 
-    res.status(200).send(products);
+    if (queryString) {
+      query.or(queryString);
+    }
+
+    query.exec((err, products) => {
+      if (err) {
+        console.log(err)
+        process.exit();
+        res.status(500).end(err);
+      }
+
+      res.status(200).send(products);
+    });
   });
 });
 
@@ -90,14 +113,15 @@ app.post('/', (req, res) => {
 
 app.delete('/:remoteId', (req, res) => {
   const id = req.params.remoteId;
+
   db.ProductModel.remove({ remoteId: id }, (err, result) => {
     if (err) {
       return res.status(500).send(err);
     } else if (result.result.n === 0) {
-      res.status(404).end();      
+      res.status(404).end();
     } else {
       res.status(200).send(id);
-    }   
+    }
   });
 });
 
