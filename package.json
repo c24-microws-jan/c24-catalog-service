@@ -24,13 +24,8 @@
     "cors": "~2.7.1",
     "expect.js": "^0.3.1",
     "express": "~4.13.4",
-    "mocha": "^2.4.5",
     "mongoose": "^4.3.7",
-    "nock": "^7.0.2",
-    "request": "^2.69.0",
-    "resilient": "^0.3.3",
-    "resilient-consul": "^0.1.6",
-    "sinon": "^1.17.3"
+    "request": "^2.69.0"
   },
   "devDependencies": {
     "babel-core": "^6.4.5",
@@ -39,7 +34,6 @@
     "gulp-live-server": "~0.0.29",
     "gulp-shell": "~0.5.2",
     "minimist": "~1.2.0",
-    "mocha": "^2.4.5",
     "run-sequence": "~1.1.5",
     "sinon": "^1.17.3",
     "supertest": "^1.1.0",

@@ -48,7 +48,7 @@ app.post('/', (req, res) => {
     }
 
 
-    request(`http://musicbrainz.org/ws/2/release/${remoteId}?inc=artist+credits+labels+discids+recordings&fmt=json`, (err, resp, release) => {
+    request(`http://musicbrainz.org/ws/2/release/${remoteId}?inc=artist-credits+labels+discids+recordings&fmt=json`, (err, resp, release) => {
       if (err) {
         if (err) {
           return res.status(500).send(err);
