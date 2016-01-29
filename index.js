@@ -88,6 +88,19 @@ app.post('/', (req, res) => {
   });
 });
 
+app.delete('/:remoteId', (req, res) => {
+  const id = req.params.remoteId;
+  db.ProductModel.remove({ remoteId: id }, (err, result) => {
+    if (err) {
+      return res.status(500).send(err);
+    } else if (result.result.n === 0) {
+      res.status(404).end();      
+    } else {
+      res.status(200).send(id);
+    }   
+  });
+});
+
 let server;
 
 if (!module.parent) {
