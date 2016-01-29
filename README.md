@@ -136,13 +136,13 @@ docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
 * **Data Params**
 
   {
-		musicbrainzReleaseId: [guid]
+		remoteId: [guid]
 	}
 
 * **Success Response:**
 
   * **Code:** 201 <br />
-    **Content:** `{ id: integer }`
+    **Content:** `{ id: integer, remoteId: GUID, images: [Array], release: Object }`
 
 * **Error Response:**
 
