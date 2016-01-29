@@ -47,7 +47,6 @@ app.post('/', (req, res) => {
       return res.status(409).json({ error: { message: 'Product already exists' }});
     }
 
-
     request(`http://musicbrainz.org/ws/2/release/${remoteId}?inc=artist-credits+labels+discids+recordings&fmt=json`, (err, resp, release) => {
       if (err) {
         if (err) {
@@ -66,15 +65,13 @@ app.post('/', (req, res) => {
         let parsedImages;
 
         try {
-          parsedImages = JSON.parse(images);
-        } catch(err) {
-          parsedImages = [];
-        }
+          parsedImages = JSON.parse(images).images;
+        } catch(err) {}
 
         const product = new db.ProductModel({
           remoteId: remoteId,
           release: parsedRelease,
-          images: parsedImages || {}
+          images: parsedImages || []
         });
 
         product.save((err, product) => {
