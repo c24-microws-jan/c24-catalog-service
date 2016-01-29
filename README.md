@@ -42,7 +42,7 @@ docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
 
   `GET`
 
-*  **URL Params**
+   **URL Params**
 
    **Required:**
 
@@ -61,7 +61,7 @@ docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{ id: integer, remoteId: GUID, images: [Array], release: Object }]`
+    **Content:** `[{ remoteId: GUID, release: Object images: Array }]`
 
 * **Error Response:**
 
@@ -73,47 +73,6 @@ docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
   GET /
 
 * **Notes:**
-
-**Get Product**
-----
-  Get product in catalog
-
-* **URL**
-
-  /:id
-
-* **Method:**
-
-  `GET`
-
-*  **URL Params**
-
-   **Required:**
-
-		`id=[string]`
-
-   **Optional:**
-
-* **Data Params**
-
-  None
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-    **Content:** `{ id: integer, remoteId: GUID, images: [Array], release: Object }`
-
-* **Error Response:**
-
-  * **Code:** 400 Bad Request <br />
-    **Content:** `{ error : { message: "Invalid request" } }`
-
-  * **Code:** 404 Not Found <br />
-    **Content:** `{ error : { message: "Product not found" } }`
-
-* **Sample Call:**
-
-  GET /:asd123123sad
 
 **Add Product**
 ----
@@ -154,7 +113,8 @@ docker push 46.101.193.82:5000/c24-catalog-service:1.0.0
 
 * **Sample Call:**
 
-  GET /:asd123123sad
+  POST /
+  { remoteId: 'asd123' }
 
 **DELETE Product**
 ----
